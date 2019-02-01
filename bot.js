@@ -1,80 +1,122 @@
+// Import the discord.js module
 const Discord = require('discord.js');
+
+// Create an instance of a Discord client
 const client = new Discord.Client();
-const prefix =!
- 
+
+/**
+ * The ready event is vital, it means that only _after_ this will your bot start reacting to information
+ * received from Discord
+ */
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-client.user.setGame(`Nothing`,"http://twitch.tv/S-F")
-  console.log('')
-  console.log('')
-  console.log('╔[═════════════════════════════════════════════════════════════════]╗')
-  console.log(`[Start] ${new Date()}`);
-  console.log('╚[═════════════════════════════════════════════════════════════════]╝')
-  console.log('')
-  console.log('╔[════════════════════════════════════]╗');
-  console.log(`Logged in as * [ " ${client.user.username} " ]`);
-  console.log('')
-  console.log('Informations :')
-  console.log('')
-  console.log(`servers! [ " ${client.guilds.size} " ]`);
-  console.log(`Users! [ " ${client.users.size} " ]`);
-  console.log(`channels! [ " ${client.channels.size} " ]`);
-  console.log('╚[════════════════════════════════════]╝')
-  console.log('')
-  console.log('╔[════════════]╗')
-  console.log(' Bot Is Online')
-  console.log('╚[════════════]╝')
-  console.log('')
-  console.log('')
+  console.log('I am ready!');
 });
- 
+
+client.on('message', message => {
+  // Ignore messages that aren't from a guild
+  if (!message.guild) return;
+
+  // If the message content starts with "!kick"
+  if (message.content.startsWith('!kick')) {
+    // Assuming we mention someone in the message, this will return the user
+    // Read more about mentions over at https://discord.js.org/#/docs/main/stable/class/MessageMentions
+    const user = message.mentions.users.first();
+    // If we have a user mentioned
+    if (user) {
+      // Now we get the member from the user
+      const member = message.guild.member(user);
+      // If the member is in the guild
+      if (member) {
+        /**
+         * Kick the member
+         * Make sure you run this on a member, not a user!
+         * There are big differences between a user and a member
+         */
+        member.kick('Optional reason that will display in the audit logs').then(() => {
+          // We let the message author know we were able to kick the person
+          message.reply(`Successfully kicked ${user.tag}`);
+        }).catch(err => {
+          // An error happened
+          // This is generally due to the bot not being able to kick the member,
+          // either due to missing permissions or role hierarchy
+          message.reply('I was unable to kick the member');
+          // Log the error
+          console.error(err);
+        });
+      } else {
+        // The mentioned user isn't in this guild
+        message.reply('That user isn\'t in this guild!');
+      }
+    // Otherwise, if no user was mentioned
+    } else {
+      message.reply('You didn\'t mention the user to kick!');
+    }
+  }
+});
+
+// Log our bot in using the token from https://discordapp.com/developers/applications/me
 client.login(process.env.BOT_TOKEN);
 
-const Discord = require("discord.js");
-  const kboosh = new Discord.Client();
-    const kbooshtoken = "MzI3NzM2NTMyOTMwOTIwNDUw.DGmnLA.QFbtYXPzTAvZsoFW70wNLyVm3lE"
-      kboosh.on('ready', () => {
-        kboosh.user.setGame(`KBOOSH TEST Broadcast`,'https://www.twitch.tv/TEST-Broadcast');
-          console.log('Im Ready!');
-  
+// Import the discord.js module
+const Discord = require('discord.js');
+
+// Create an instance of a Discord client
+const client = new Discord.Client();
+
+/**
+ * The ready event is vital, it means that only _after_ this will your bot start reacting to information
+ * received from Discord
+ */
+client.on('ready', () => {
+  console.log('I am ready!');
+});
+
+client.on('message', message => {
+  // Ignore messages that aren't from a guild
+  if (!message.guild) return;
+
+  // if the message content starts with "!ban"
+  if (message.content.startsWith('!ban')) {
+    // Assuming we mention someone in the message, this will return the user
+    // Read more about mentions over at https://discord.js.org/#/docs/main/stable/class/MessageMentions
+    const user = message.mentions.users.first();
+    // If we have a user mentioned
+    if (user) {
+      // Now we get the member from the user
+      const member = message.guild.member(user);
+      // If the member is in the guild
+      if (member) {
+        /**
+         * Ban the member
+         * Make sure you run this on a member, not a user!
+         * There are big differences between a user and a member
+         * Read more about what ban options there are over at
+         * https://discord.js.org/#/docs/main/stable/class/GuildMember?scrollTo=ban
+         */
+        member.ban({
+          reason: 'They were bad!',
+        }).then(() => {
+          // We let the message author know we were able to ban the person
+          message.reply(`Successfully banned ${user.tag}`);
+        }).catch(err => {
+          // An error happened
+          // This is generally due to the bot not being able to ban the member,
+          // either due to missing permissions or role hierarchy
+          message.reply('I was unable to ban the member');
+          // Log the error
+          console.error(err);
         });
+      } else {
+        // The mentioned user isn't in this guild
+        message.reply('That user isn\'t in this guild!');
+      }
+    } else {
+    // Otherwise, if no user was mentioned
+      message.reply('You didn\'t mention the user to ban!');
+    }
+  }
+});
 
-  kboosh.on('message', message => {
-    if (message.content.split(' ')[0] == '%k')
-       message.guild.members.forEach( member => {
-         if (!message.member.hasPermission("ADMINISTRATOR"))  return;
-
-
-           member.send( `${member} ! ` + "**" + message.guild.name + " : ** " + message.content.substr(3));
-                                                      message.delete();
-            
-                                                    });
-            
-                                                  });
-   kboosh.on("message", message => {
-       var prefix = "%";
- 
-             var args = message.content.substring(prefix.length).split(" ");
-                if (message.content.startsWith(prefix + "b")) {
-                          if (!message.member.hasPermission("ADMINISTRATOR"))  return;
-
-                          if (!args[1]) {
-                            
-                                 let embed3 = new Discord.RichEmbed()
-                                     .setDescription(":white_check_mark: | تم ارسال رسالة لا يوجد فيها شيء")
-                                       .setColor("#FF00FF")
-                                          message.channel.sendEmbed(embed3);
-                            
-                                        } else {
-
-                            
-                                           let embed4 = new Discord.RichEmbed()
-                                                            .setDescription(':white_check_mark: | تم ارسال الرساله للجميع ..')
-                                                                .setColor("#99999")
-                               
-                                                                message.channel.sendEmbed(embed4);
-                                                      message.delete();
-                            }
-                          }
+// Log our bot in using the token from https://discordapp.com/developers/applications/me
 });
 client.login(process.env.BOT_TOKEN);
