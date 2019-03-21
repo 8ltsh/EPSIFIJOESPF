@@ -1,42 +1,10 @@
-const Discord = require("discord.js");
+onst Discord = require('discord.js');
+const moment = require("moment");
+const fs = require("fs");
 const client = new Discord.Client();
-
-const prefix = "8";
-var usage = `\`${prefix}bc <content>\``
-
-
-client.on("message", (message) => {
-  if (message.author.bot) return;
-  if (message.content.indexOf(prefix) != 0) return;
-  const [command, ...args] = message.content.slice(prefix.length).split(/ +/g);
-  if (command === "bc") {
-    if (!message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`**✖｜${message.author.username}, Admins Only`);
-    if (args.length == 0) message.channel.send(`**✖｜${message.author.username}, the correct usage is ${usage}**`);
-    var idx = 0, fails = 0;
-    message.channel.send(`${idx} received from ${message.guild.members.size} \n ${fails} fails`).then(res => {
-    setInterval(() => {
-      res.edit(`${idx} received from ${message.guild.members.size} \n ${fails} fails`)
-    }, 3000)
-      message.guild.members.map(member => {
-        var content = args.join(" ").replace(/\[mention\]|\[ping\]|\[user\]/g, `<@${member.id}>`) // use less variables in loop
-        setTimeout(() => {
-          member.send({
-            embed: {
-              description: content,
-              color: 990000,
-              footer: {
-                text: message.guild.name
-              }
-            }
-          }).then(() => {
-            idx++;
-          }).catch((err) => {
-            fails++;
-          });
-        }, idx * 5);
-      });
-    });
-  }
+ const prefix = "-";
+client.on('ready', () => {
+    console.log('I am ready!');
 });
 
 client.login(process.env.BOT_TOK
