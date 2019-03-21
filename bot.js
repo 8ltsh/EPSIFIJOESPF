@@ -1,35 +1,45 @@
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const client = new Discord.Client();
-const prefix =8
- 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-client.user.setGame(`Nothing`,"http://twitch.tv/S-F")
-  console.log('')
-  console.log('')
-  console.log('╔[═════════════════════════════════════════════════════════════════]╗')
-  console.log(`[Start] ${new Date()}`);
-  console.log('╚[═════════════════════════════════════════════════════════════════]╝')
-  console.log('')
-  console.log('╔[════════════════════════════════════]╗');
-  console.log(`Logged in as * [ " ${client.user.username} " ]`);
-  console.log('')
-  console.log('Informations :')
-  console.log('')
-  console.log(`servers! [ " ${client.guilds.size} " ]`);
-  console.log(`Users! [ " ${client.users.size} " ]`);
-  console.log(`channels! [ " ${client.channels.size} " ]`);
-  console.log('╚[════════════════════════════════════]╝')
-  console.log('')
-  console.log('╔[════════════]╗')
-  console.log(' Bot Is Online')
-  console.log('╚[════════════]╝')
-  console.log('')
-  console.log('')
-});
- 
-client.login(process.env.BOT_TOKEN);
 
+const prefix = "8";
+var usage = `\`${prefix}bc <content>\``
+
+
+client.on("message", (message) => {
+  if (message.author.bot) return;
+  if (message.content.indexOf(prefix) != 0) return;
+  const [command, ...args] = message.content.slice(prefix.length).split(/ +/g);
+  if (command === "bc") {
+    if (!message.member.hasPermission("ADMINISTRATOR")) return message.channel.send(`**✖｜${message.author.username}, Admins Only`);
+    if (args.length == 0) message.channel.send(`**✖｜${message.author.username}, the correct usage is ${usage}**`);
+    var idx = 0, fails = 0;
+    message.channel.send(`${idx} received from ${message.guild.members.size} \n ${fails} fails`).then(res => {
+    setInterval(() => {
+      res.edit(`${idx} received from ${message.guild.members.size} \n ${fails} fails`)
+    }, 3000)
+      message.guild.members.map(member => {
+        var content = args.join(" ").replace(/\[mention\]|\[ping\]|\[user\]/g, `<@${member.id}>`) // use less variables in loop
+        setTimeout(() => {
+          member.send({
+            embed: {
+              description: content,
+              color: 990000,
+              footer: {
+                text: message.guild.name
+              }
+            }
+          }).then(() => {
+            idx++;
+          }).catch((err) => {
+            fails++;
+          });
+        }, idx * 5);
+      });
+    });
+  }
+});
+
+client.login(process.env.BOT_TOK
 
 
 
@@ -249,152 +259,4 @@ function play(guild, song) {
   .setTitle(`**${ idk.title}**`)
   .setURL( idk.url)
   .addField('Time The Video :' , `${song.time}`, true)
-  .addField('Channel Name :' , `${song.best}`, true)
-  .addField('Channel ID :' , `${song.zg}`, true)
-  .addField('Video Created at :' , `${ idk.datePublished}`, true)
-  .addField('Views :' , `${ idk.views}`, true)
-  .addField('Like👍 :' , `${ idk.likeCount}`, true)
-  .addField('dislike👎 :' , `${ idk.dislikeCount}`, true)
-  .addField('comments :' , `${ idk.commentCount}`, true)
-  .setImage(`${song.eyad}`)
-  .setThumbnail('http://cdn.akhbaar24.com/430e061a-f89a-43c7-86d9-82fae5f7c495.jpg')
-  .setColor('#ff0000')
-  .setTimestamp()
-  }).then(love => {
-    love.react('👍').then(r=>{
-    love.react('👎').then(r =>{
-    love.react('🙌').then(r=> {
-    let likee = (reaction, user) => reaction.emoji.name === '👍' && user.id === msg.author.id;
-    let dislikee = (reaction, user) => reaction.emoji.name === '👎' && user.id === msg.author.id;
-    let cnn = (reaction, user) => reaction.emoji.name === '🙌' && user.id === msg.author.id;
- 
-    let ll = love.createReactionCollector(likee , {max:5});
-    let dd = love.createReactionCollector(dislikee , {max:5});
-    let cn = love.createReactionCollector(cnn , {max:5});
- 
-        ll.on("collect", r => {
-          yyyy[msg.guild.id].like++;
-  love.edit({embed : new Discord.RichEmbed()
-  .setTitle(`**${ idk.title}**`)
-  .setURL( idk.url)
-  .addField('Time The Video :' , `${song.time}`, true)
-  .addField('Channel Name :' , `${song.best}`, true)
-  .addField('Channel ID :' , `${song.zg}`, true)
-  .addField('Video Created at :' , `${ idk.datePublished}`, true)
-  .addField('Views :' , `${ idk.views}`, true)
-  .addField('Like👍 :' , `${yyyy[msg.guild.id].like}`, true)
-  .addField('dislike👎 :' , `${ idk.dislikeCount}`, true)
-  .addField('comments :' , `${ idk.commentCount}`, true)
-  .setImage(`${song.eyad}`)
-  .setThumbnail('http://cdn.akhbaar24.com/430e061a-f89a-43c7-86d9-82fae5f7c495.jpg')
-  .setColor('#ff0000')
-  .setTimestamp()
-});
-    })
- 
-    dd.on("collect", r => {
-      yyyy[msg.guild.id].dislike++;
-  love.edit({embed : new Discord.RichEmbed()
-  .setTitle(`**${ idk.title}**`)
-  .setURL( idk.url)
-  .addField('Time The Video :' , `${song.time}`, true)
-  .addField('Channel Name :' , `${song.best}`, true)
-  .addField('Channel ID :' , `${song.zg}`, true)
-  .addField('Video Created at :' , `${ idk.datePublished}`, true)
-  .addField('Views :' , `${ idk.views}`, true)
-  .addField('Like👍 :' , `${ idk.likeCount}`, true)
-  .addField('dislike👎 :' , `${yyyy[msg.guild.id].dislike}`, true)
-  .addField('comments :' , `${ idk.commentCount}`, true)
-  .setImage(`${song.eyad}`)
-  .setThumbnail('http://cdn.akhbaar24.com/430e061a-f89a-43c7-86d9-82fae5f7c495.jpg')
-  .setColor('#ff0000')
-  .setTimestamp()
-});
-})
-    cn.on("collect", r => {
-  love.edit({embed : new Discord.RichEmbed()
-  .setTitle(`**${ idk.title}**`)
-  .setURL( idk.url)
-  .addField('Time The Video :' , `${song.time}`, true)
-  .addField('Channel Name :' , `${song.best}`, true)
-  .addField('Channel ID :' , `${song.zg}`, true)
-  .addField('Video Created at :' , `${ idk.datePublished}`, true)
-  .addField('Views :' , `${ idk.views}`, true)
-  .addField('Like👍 :' , `${ idk.likeCount}`, true)
-  .addField('dislike👎 :' , `${ idk.dislikeCount}`, true)
-  .addField('comments :' , `${ idk.commentCount}`, true)
-  .setImage(`${song.eyad}`)
-  .setThumbnail('http://cdn.akhbaar24.com/430e061a-f89a-43c7-86d9-82fae5f7c495.jpg')
-  .setColor('#ff0000')
-  .setTimestamp()
-});
-})
-})
-})
-})
-})
-})
-}
-});
-
-const devs = ['486322208109494282' , '' , ''];
-
-const adminprefix = "-";
-
-client.on('message', message => {
-
-    var argresult = message.content.split(` `).slice(1).join(' ');
-
-      if (!devs.includes(message.author.id)) return;
-
-      
-
-  if (message.content.startsWith(adminprefix + 'ply')) {
-
-    client.user.setGame(argresult);
-
-      message.channel.sendMessage(`**  ${argresult} ply .. ✅**`)
-
-  } else 
-
-  if (message.content.startsWith(adminprefix + 'wt')) {
-
-  client.user.setActivity(argresult, {type:'WATCHING'});
-
-      message.channel.sendMessage(`**  ${argresult} wt .. ✅**`)
-
-  } else 
-
-  if (message.content.startsWith(adminprefix + 'ls')) {
-
-  client.user.setActivity(argresult , {type:'LISTENING'});
-
-      message.channel.sendMessage(`**  ${argresult} ls .. ✅**`)
-
-  } else 
-
-  if (message.content.startsWith(adminprefix + 'li')) {
-
-    client.user.setGame(argresult, "https://www.twitch.tv/muuuuuute");
-
-      message.channel.sendMessage(`**  ${argresult} st .. ✅**`)
-
-    }
-
-  if (message.content.startsWith(adminprefix + 'us')) {
-
-  client.user.setUsername(argresult).then
-
-      message.channel.send(`**us ..**${argresult}** `)
-
-  } else
-
-  if (message.content.startsWith(adminprefix + 'ev')) {
-
-  client.user.setAvatar(argresult);
-
-    message.channel.send(`**evatar ... :** `);
-
-  }
-
-  });
+  .addField('Channel Name :
